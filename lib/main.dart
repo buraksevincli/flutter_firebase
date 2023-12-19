@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/firebase_options.dart';
+import 'package:flutter_firebase/firestore_process.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
@@ -9,7 +10,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -17,9 +18,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Firebase',
-      home: MyHomePage(title: "Flutter Firebase Dersleri"),
+      home: FirestoreProcess(),
     );
   }
 }
@@ -58,82 +60,86 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
-                createUserEmailAndPassword();
-              },
-              child: const Text(
-                "Email & Şifre Kayıt",
-                style: TextStyle(color: Colors.white),
-              )),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-              onPressed: () {
-                loginUserEmailAndPassword();
-              },
-              child: const Text(
-                "Email & Şifre Giris",
-                style: TextStyle(color: Colors.white),
-              )),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
-              onPressed: () {
-                signOutUser();
-              },
-              child: const Text(
-                "Oturumu Kapat",
-                style: TextStyle(color: Colors.white),
-              )),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              onPressed: () {
-                deleteUser();
-              },
-              child: const Text(
-                "Hesabı Sil",
-                style: TextStyle(color: Colors.white),
-              )),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              onPressed: () {
-                changePassword();
-              },
-              child: const Text(
-                "Şifre Değiştir",
-                style: TextStyle(color: Colors.white),
-              )),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              onPressed: () {
-                changeEmail();
-              },
-              child: const Text(
-                "Email Değiştir",
-                style: TextStyle(color: Colors.white),
-              )),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-              onPressed: () {
-                signInWithGoogle();
-              },
-              child: const Text(
-                "Google",
-                style: TextStyle(color: Colors.white),
-              )),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-              onPressed: () {
-                loginWithPhoneNumber();
-              },
-              child: const Text(
-                "Telefon",
-                style: TextStyle(color: Colors.white),
-              )),
-        ]),
-      ),
+      body: authenticationProcess(),
+    );
+  }
+
+  Center authenticationProcess() {
+    return Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              createUserEmailAndPassword();
+            },
+            child: const Text(
+              "Email & Şifre Kayıt",
+              style: TextStyle(color: Colors.white),
+            )),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: () {
+              loginUserEmailAndPassword();
+            },
+            child: const Text(
+              "Email & Şifre Giris",
+              style: TextStyle(color: Colors.white),
+            )),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+            onPressed: () {
+              signOutUser();
+            },
+            child: const Text(
+              "Oturumu Kapat",
+              style: TextStyle(color: Colors.white),
+            )),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            onPressed: () {
+              deleteUser();
+            },
+            child: const Text(
+              "Hesabı Sil",
+              style: TextStyle(color: Colors.white),
+            )),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            onPressed: () {
+              changePassword();
+            },
+            child: const Text(
+              "Şifre Değiştir",
+              style: TextStyle(color: Colors.white),
+            )),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            onPressed: () {
+              changeEmail();
+            },
+            child: const Text(
+              "Email Değiştir",
+              style: TextStyle(color: Colors.white),
+            )),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: () {
+              signInWithGoogle();
+            },
+            child: const Text(
+              "Google",
+              style: TextStyle(color: Colors.white),
+            )),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+            onPressed: () {
+              loginWithPhoneNumber();
+            },
+            child: const Text(
+              "Telefon",
+              style: TextStyle(color: Colors.white),
+            )),
+      ]),
     );
   }
 
