@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+// ignore: must_be_immutable
 class FirestoreProcess extends StatelessWidget {
   FirestoreProcess({super.key});
 
@@ -144,15 +144,15 @@ class FirestoreProcess extends StatelessWidget {
   }
 
   void addDataFunction() async {
-    Map<String, dynamic> _additiveUser = <String, dynamic>{};
-    _additiveUser["name"] = "Burak";
-    _additiveUser["age"] = 28;
-    _additiveUser["student"] = false;
-    _additiveUser["address"] = {"province": "Bursa", "county": "Nilüfer"};
-    _additiveUser["colors"] = FieldValue.arrayUnion(["Mavi", "Yeşil"]);
-    _additiveUser["createdAt"] = FieldValue.serverTimestamp();
+    Map<String, dynamic> additiveUser = <String, dynamic>{};
+    additiveUser["name"] = "Burak";
+    additiveUser["age"] = 28;
+    additiveUser["student"] = false;
+    additiveUser["address"] = {"province": "Bursa", "county": "Nilüfer"};
+    additiveUser["colors"] = FieldValue.arrayUnion(["Mavi", "Yeşil"]);
+    additiveUser["createdAt"] = FieldValue.serverTimestamp();
 
-    await firestore.collection("users").add(_additiveUser);
+    await firestore.collection("users").add(additiveUser);
   }
 
   // Set ile hem veri ekleyebilir hemde veri güncelleyebiliriz. Yanlış ID girersek yeni bir alan oluşturup veriyi orada saklar.
@@ -187,14 +187,13 @@ class FirestoreProcess extends StatelessWidget {
       debugPrint(userMap["name"]);
     }
 
-    var _burakDoc = await firestore.doc("users/MfCkS4vxl1e6VwbFvb9Z").get();
-    debugPrint(_burakDoc.data()!["address"]["province"].toString());
+    var burakDoc = await firestore.doc("users/MfCkS4vxl1e6VwbFvb9Z").get();
+    debugPrint(burakDoc.data()!["address"]["province"].toString());
   }
 
   void readDataRealTimeFunction() async {
     //var userStream = await firestore.collection("users").snapshots();
-    var userStream =
-        await firestore.doc("users/MfCkS4vxl1e6VwbFvb9Z").snapshots();
+    var userStream = firestore.doc("users/MfCkS4vxl1e6VwbFvb9Z").snapshots();
     userSubscribe = userStream.listen((event) {
       // for (var element in event.docChanges) {
       //   debugPrint(element.doc.data().toString());
@@ -253,9 +252,9 @@ class FirestoreProcess extends StatelessWidget {
     var userRef = firestore.collection("users");
     var result = await userRef.where("age", isLessThanOrEqualTo: 30).get();
 
-    // for (var user in result.docs) {
-    //   debugPrint(user.data()["name"]);
-    // }
+    for (var user in result.docs) {
+      debugPrint(user.data()["name"]);
+    }
 
     //descending = false (küçükten büyüğe)
     var sort = await userRef.orderBy("age", descending: false).get();
@@ -268,7 +267,8 @@ class FirestoreProcess extends StatelessWidget {
     final ImagePicker picker = ImagePicker();
 
     XFile? file = await picker.pickImage(source: ImageSource.camera);
-    var profileRef = FirebaseStorage.instance.ref("users/profile_pictures/user_id");
+    var profileRef =
+        FirebaseStorage.instance.ref("users/profile_pictures/user_id");
     var task = profileRef.putFile(File(file!.path));
 
     task.whenComplete(() async {

@@ -36,8 +36,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late FirebaseAuth auth;
-  String _email = "brksvncli@gmail.com";
-  String _password = "burak2901";
+  final String _email = "brksvncli@gmail.com";
+  final String _password = "burak2901";
 
   @override
   void initState() {
@@ -145,16 +145,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void createUserEmailAndPassword() async {
     try {
-      var _userCredential = await auth.createUserWithEmailAndPassword(
+      var userCredential = await auth.createUserWithEmailAndPassword(
           email: _email, password: _password);
-      var _myUser = _userCredential.user;
+      var myUser = userCredential.user;
 
-      if (!_myUser!.emailVerified) {
-        await _myUser.sendEmailVerification();
+      if (!myUser!.emailVerified) {
+        await myUser.sendEmailVerification();
       } else {
         debugPrint("User email is verified!");
       }
-      debugPrint(_userCredential.toString());
+      debugPrint(userCredential.toString());
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -162,9 +162,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void loginUserEmailAndPassword() async {
     try {
-      var _userCredential = await auth.signInWithEmailAndPassword(
+      var userCredential = await auth.signInWithEmailAndPassword(
           email: _email, password: _password);
-      debugPrint(_userCredential.toString());
+      debugPrint(userCredential.toString());
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -241,12 +241,12 @@ class _MyHomePageState extends State<MyHomePage> {
         debugPrint(e.toString());
       },
       codeSent: (String verificationId, int? resendToken) {
-        String _smsCode = "290195";
+        String smsCode = "290195";
         debugPrint("Code Send Tetiklendi");
-        var _credential = PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: _smsCode);
+        var credential = PhoneAuthProvider.credential(
+            verificationId: verificationId, smsCode: smsCode);
 
-        auth.signInWithCredential(_credential);
+        auth.signInWithCredential(credential);
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
     );
